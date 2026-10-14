@@ -1,0 +1,2759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        WHH Partnership Management System
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     LOGIN PAGE
+========================================================= -->
+
+<section
+    id="loginPage"
+    class="login-page"
+>
+
+    <div class="login-panel">
+
+        <div class="login-brand">
+
+            <img
+                src="assets/whh-logo.png"
+                alt="Welthungerhilfe"
+                class="login-logo"
+            >
+
+            <div>
+
+                <h1>
+                    Partnership Management System
+                </h1>
+
+                <p>
+                    Welthungerhilfe Ethiopia
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form
+            id="loginForm"
+            class="login-form"
+        >
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    autocomplete="username"
+                    placeholder="name@whh.de"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <div
+                id="loginMessage"
+                class="form-message"
+            ></div>
+
+
+            <button
+                type="submit"
+                class="primary-button full-width"
+            >
+                Sign In
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     APPLICATION
+========================================================= -->
+
+<section
+    id="appPage"
+    class="app-page hidden"
+>
+
+
+    <!-- =====================================================
+         TOP HEADER
+    ====================================================== -->
+
+    <header class="top-header">
+
+        <div class="header-brand">
+
+            <img
+                src="assets/whh-logo.png"
+                alt="Welthungerhilfe"
+                class="header-logo"
+            >
+
+            <div>
+
+                <div class="header-system-name">
+                    Partnership Management System
+                </div>
+
+                <div class="header-office-name">
+                    Welthungerhilfe Ethiopia
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-user-area">
+
+            <div class="header-user-details">
+
+                <span
+                    id="currentUserName"
+                    class="header-user-name"
+                ></span>
+
+                <span
+                    id="currentUserRole"
+                    class="header-user-role"
+                ></span>
+
+            </div>
+
+
+            <button
+                id="logoutButton"
+                type="button"
+                class="secondary-button"
+            >
+                Sign Out
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN NAVIGATION
+    ====================================================== -->
+
+    <nav class="main-navigation">
+
+        <button
+            id="homeNav"
+            type="button"
+            class="nav-button nav-active"
+        >
+            Home
+        </button>
+
+
+        <button
+            id="partnersNav"
+            type="button"
+            class="nav-button"
+        >
+            Partners
+        </button>
+
+
+        <button
+            id="partnershipsNav"
+            type="button"
+            class="nav-button"
+        >
+            Partnerships
+        </button>
+
+
+        <button
+            id="projectsNav"
+            type="button"
+            class="nav-button"
+        >
+            Projects
+        </button>
+
+
+        <button
+            id="meetingsNav"
+            type="button"
+            class="nav-button"
+        >
+            Meetings &amp; Actions
+        </button>
+
+    </nav>
+
+
+
+    <!-- =====================================================
+         PAGE CONTAINER
+    ====================================================== -->
+
+    <main class="page-container">
+
+
+        <!-- =================================================
+             HOME
+        ================================================== -->
+
+        <section
+            id="homeView"
+            class="workspace-view"
+        >
+
+            <div class="home-heading">
+                <h2>Partnership Management</h2>
+            </div>
+
+            <div class="home-module-grid">
+
+                <button type="button" class="home-module-card" data-home-workspace="partners">
+                    <span class="home-module-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="M16 11a4 4 0 1 0-3.7-5.5A5 5 0 0 1 13 8c0 1.1-.35 2.12-.95 2.95A6.5 6.5 0 0 1 18.5 17v1H22v-1.5A5.5 5.5 0 0 0 16.5 11H16ZM7.5 12A4.5 4.5 0 1 0 7.5 3a4.5 4.5 0 0 0 0 9Zm0 2C3.36 14 0 16.46 0 19.5V21h15v-1.5C15 16.46 11.64 14 7.5 14Z"/></svg>
+                    </span>
+                    <span class="home-module-title">Partners</span>
+                </button>
+
+                <button type="button" class="home-module-card" data-home-workspace="partnerships">
+                    <span class="home-module-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="M8.6 12.8 5.8 15.6a3 3 0 1 0 4.2 4.2l3.2-3.2-1.4-1.4-3.2 3.2a1 1 0 1 1-1.4-1.4l2.8-2.8-1.4-1.4Zm6.8-1.6 2.8-2.8A3 3 0 1 0 14 4.2l-3.2 3.2 1.4 1.4L15.4 5.6A1 1 0 1 1 16.8 7l-2.8 2.8 1.4 1.4ZM8.8 16.6l7.8-7.8-1.4-1.4-7.8 7.8 1.4 1.4Z"/></svg>
+                    </span>
+                    <span class="home-module-title">Partnerships</span>
+                </button>
+
+                <button type="button" class="home-module-card" data-home-workspace="projects">
+                    <span class="home-module-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="M9 4V2h6v2h5a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5Zm2 0h2V3h-2v1Zm-7 6v9h16v-9h-6v2h-4v-2H4Zm6 0h4V8h-4v2ZM4 6v2h5V7h6v1h5V6H4Z"/></svg>
+                    </span>
+                    <span class="home-module-title">Projects</span>
+                </button>
+
+                <button type="button" class="home-module-card" data-home-workspace="meetings">
+                    <span class="home-module-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-8h16v8ZM4 9V7a1 1 0 0 1 1-1h1v2h2V6h8v2h2V6h1a1 1 0 0 1 1 1v2H4Zm3 5h4v4H7v-4Z"/></svg>
+                    </span>
+                    <span class="home-module-title">Meetings &amp; Actions</span>
+                </button>
+
+                <a class="home-module-card home-module-link" href="https://welthungerhilfe.sharepoint.com/sites/promis" target="_blank" rel="noopener noreferrer">
+                    <span class="home-module-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="M14 3h7v7h-2V6.41l-8.3 8.3-1.4-1.42L17.58 5H14V3ZM5 5h6v2H5a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-6h2v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Z"/></svg>
+                    </span>
+                    <span class="home-module-title">PROMIS</span>
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PARTNER LIST
+        ================================================== -->
+
+        <section
+            id="partnerListView"
+            class="workspace-view hidden"
+        >
+
+            <div class="page-heading-row">
+
+                <div>
+
+                    <h2>
+                        Partners
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="addPartnerButton"
+                    type="button"
+                    class="primary-button hidden"
+                >
+                    Add Partner
+                </button>
+
+            </div>
+
+
+            <div class="filter-row">
+
+                <input
+                    type="search"
+                    id="partnerSearch"
+                    class="search-input"
+                    placeholder="Search partner name..."
+                >
+
+            </div>
+
+
+            <div class="table-panel">
+
+                <table class="data-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Partner Name
+                            </th>
+
+                            <th>
+                                Acronym
+                            </th>
+
+                            <th>
+                                Partner Type
+                            </th>
+
+                            <th>
+                                Legal Status
+                            </th>
+
+                            <th>
+                                Geographic Reach
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="partnerTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PARTNER PROFILE
+        ================================================== -->
+
+        <section
+            id="partnerProfileView"
+            class="workspace-view hidden"
+        >
+
+            <div class="record-toolbar">
+
+                <button
+                    id="backToPartnersButton"
+                    type="button"
+                    class="text-button"
+                >
+                    ← Back to Partners
+                </button>
+
+
+                <div class="record-toolbar-actions">
+
+                    <button
+                        id="editPartnerButton"
+                        type="button"
+                        class="primary-button hidden"
+                    >
+                        Edit Partner
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="record-header">
+
+                <div>
+
+                    <h2 id="profilePartnerName"></h2>
+
+                    <div
+                        id="profilePartnerSubtitle"
+                        class="record-subtitle"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    id="profilePartnerStatus"
+                    class="record-status"
+                ></div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 PARTNER TABS
+            ============================================== -->
+
+            <div class="tab-navigation">
+
+                <button
+                    id="overviewTabButton"
+                    class="tab-button active"
+                    type="button"
+                >
+                    Overview
+                </button>
+
+
+                <button
+                    id="contactsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Contacts
+                </button>
+
+
+                <button
+                    id="partnerPartnershipsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Partnerships
+                </button>
+
+
+                <button
+                    id="partnerDocumentsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Documents
+                </button>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 PARTNER OVERVIEW TAB
+            ============================================== -->
+
+            <section
+                id="overviewTabContent"
+                class="tab-content"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Organization Profile
+                        </h3>
+
+                    </div>
+
+
+                    <div class="detail-grid">
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Partner Type
+                            </span>
+
+                            <span id="profilePartnerType"></span>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Legal Status
+                            </span>
+
+                            <span id="profileLegalStatus"></span>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Date Established
+                            </span>
+
+                            <span id="profileDateEstablished"></span>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Headquarters
+                            </span>
+
+                            <span id="profileHeadquarters"></span>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Country
+                            </span>
+
+                            <span id="profileCountry"></span>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Geographic Reach
+                            </span>
+
+                            <span id="profileGeographicReach"></span>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                First Engagement with WHH
+                            </span>
+
+                            <span id="profileFirstEngagement"></span>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Website
+                            </span>
+
+                            <span id="profileWebsite"></span>
+
+                        </div>
+
+
+                        <div class="detail-item full-width-detail">
+
+                            <span class="detail-label">
+                                Address
+                            </span>
+
+                            <span id="profileAddress"></span>
+
+                        </div>
+
+
+                        <div class="detail-item full-width-detail">
+
+                            <span class="detail-label">
+                                Organization Description
+                            </span>
+
+                            <span id="profileDescription"></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Localization Characteristics
+                        </h3>
+
+                    </div>
+
+
+                    <div
+                        id="partnerLocalizationContainer"
+                        class="tag-list"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 PARTNER CONTACTS TAB
+            ============================================== -->
+
+            <section
+                id="contactsTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Contacts
+                        </h3>
+
+
+                        <button
+                            id="addContactButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Add Contact
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-panel flat">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Name
+                                    </th>
+
+                                    <th>
+                                        Position
+                                    </th>
+
+                                    <th>
+                                        Email
+                                    </th>
+
+                                    <th>
+                                        Phone
+                                    </th>
+
+                                    <th>
+                                        Primary
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="partnerContactsTableBody"></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 PARTNER PARTNERSHIPS TAB
+            ============================================== -->
+
+            <section
+                id="partnerPartnershipsTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Partnership History
+                        </h3>
+
+
+                        <button
+                            id="addPartnershipForPartnerButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Add Partnership
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-panel flat">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Partnership
+                                    </th>
+
+                                    <th>
+                                        Type
+                                    </th>
+
+                                    <th>
+                                        Contract Start
+                                    </th>
+
+                                    <th>
+                                        Contract End
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="partnerPartnershipsTableBody"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 PARTNER DOCUMENTS TAB
+            ============================================== -->
+
+            <section
+                id="partnerDocumentsTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Documents
+                        </h3>
+
+
+                        <button
+                            id="uploadPartnerDocumentButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Upload Document
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="partnerDocumentsContainer"
+                    ></div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PARTNERSHIP LIST
+        ================================================== -->
+
+        <section
+            id="partnershipListView"
+            class="workspace-view hidden"
+        >
+
+            <div class="page-heading-row">
+
+                <div>
+
+                    <h2>
+                        Partnerships
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="addPartnershipButton"
+                    type="button"
+                    class="primary-button hidden"
+                >
+                    Add Partnership
+                </button>
+
+            </div>
+
+
+            <div class="filter-row">
+
+                <input
+                    type="search"
+                    id="partnershipSearch"
+                    class="search-input"
+                    placeholder="Search partner, partnership or code..."
+                >
+
+            </div>
+
+
+            <div class="table-panel">
+
+                <table class="data-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Partner
+                            </th>
+
+                            <th>
+                                Partnership
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Contract Start
+                            </th>
+
+                            <th>
+                                Contract End
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="partnershipTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PARTNERSHIP DETAIL
+        ================================================== -->
+
+        <section
+            id="partnershipDetailView"
+            class="workspace-view hidden"
+        >
+
+            <div class="record-toolbar">
+
+                <button
+                    id="backToPartnershipsButton"
+                    type="button"
+                    class="text-button"
+                >
+                    ← Back to Partnerships
+                </button>
+
+
+                <div class="record-toolbar-actions">
+
+                    <button
+                        id="editPartnershipButton"
+                        type="button"
+                        class="primary-button hidden"
+                    >
+                        Edit Partnership
+                    </button>
+
+
+                    <button
+                        id="cancelPartnershipEditButton"
+                        type="button"
+                        class="secondary-button hidden"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        id="savePartnershipButton"
+                        type="button"
+                        class="primary-button hidden"
+                    >
+                        Save Partnership
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="record-header">
+
+                <div>
+
+                    <div class="record-context-label">
+                        Partner
+                    </div>
+
+                    <h2 id="partnershipPartnerName"></h2>
+
+                    <div
+                        id="partnershipTitle"
+                        class="partnership-title"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    id="partnershipStatus"
+                    class="record-status"
+                ></div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 PARTNERSHIP TABS
+            ============================================== -->
+
+            <div class="tab-navigation partnership-tabs">
+
+                <button
+                    id="partnershipOverviewTabButton"
+                    class="tab-button active"
+                    type="button"
+                >
+                    Overview
+                </button>
+
+
+                <button
+                    id="partnershipAgreementsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Agreements / MoUs
+                </button>
+
+
+                <button
+                    id="partnershipProjectsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Related Projects
+                </button>
+
+
+                <button
+                    id="partnershipCapacityTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Capacity
+                </button>
+
+
+                <button
+                    id="partnershipEquityTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Equity
+                </button>
+
+
+                <button
+                    id="partnershipFeedbackTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Feedback
+                </button>
+
+
+                <button
+                    id="partnershipMeetingsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Meetings & Actions
+                </button>
+
+
+                <button
+                    id="partnershipSuccessTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Success Stories
+                </button>
+
+
+                <button
+                    id="partnershipExitTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Exit / Closure
+                </button>
+
+
+                <button
+                    id="partnershipDocumentsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Documents
+                </button>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 PARTNERSHIP OVERVIEW
+            ============================================== -->
+
+            <section
+                id="partnershipOverviewTabContent"
+                class="tab-content"
+            >
+
+                <div
+                    id="partnershipOverviewReadMode"
+                >
+
+                    <div class="section-panel">
+
+                        <div class="section-title-row">
+
+                            <h3>
+                                Partnership Overview
+                            </h3>
+
+                        </div>
+
+
+                        <div class="detail-grid">
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Partnership Code
+                                </span>
+
+                                <span id="detailPartnershipCode"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Partnership Type
+                                </span>
+
+                                <span id="detailPartnershipType"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Status
+                                </span>
+
+                                <span id="detailPartnershipStatus"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Contract Start Date
+                                </span>
+
+                                <span id="detailContractStart"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Contract End Date
+                                </span>
+
+                                <span id="detailContractEnd"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Actual End Date
+                                </span>
+
+                                <span id="detailActualEnd"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    WHH Focal Person
+                                </span>
+
+                                <span id="detailWHHFocal"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Partner Focal Person
+                                </span>
+
+                                <span id="detailPartnerFocal"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Co-designed
+                                </span>
+
+                                <span id="detailCoDesigned"></span>
+
+                            </div>
+
+
+                            <div class="detail-item full-width-detail">
+
+                                <span class="detail-label">
+                                    Area of Partnership
+                                </span>
+
+                                <span id="detailPartnershipArea"></span>
+
+                            </div>
+
+
+                            <div class="detail-item full-width-detail">
+
+                                <span class="detail-label">
+                                    Strategic Objective / Purpose
+                                </span>
+
+                                <span id="detailStrategicObjective"></span>
+
+                            </div>
+
+
+                            <div class="detail-item full-width-detail">
+
+                                <span class="detail-label">
+                                    Geographic Scope
+                                </span>
+
+                                <span id="detailGeographicScope"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    WHH Role
+                                </span>
+
+                                <span id="detailWHHRole"></span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Partner Role
+                                </span>
+
+                                <span id="detailPartnerRole"></span>
+
+                            </div>
+
+
+                            <div class="detail-item full-width-detail">
+
+                                <span class="detail-label">
+                                    Notes
+                                </span>
+
+                                <span id="detailPartnershipNotes"></span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     PARTNERSHIP EDIT MODE
+                ========================================== -->
+
+                <div
+                    id="partnershipOverviewEditMode"
+                    class="hidden"
+                >
+
+                    <div class="section-panel">
+
+                        <div class="section-title-row">
+
+                            <h3>
+                                Edit Partnership
+                            </h3>
+
+                        </div>
+
+
+                        <form
+                            id="partnershipEditForm"
+                            class="form-grid"
+                        >
+
+
+                            <div class="form-group full-field">
+
+                                <label for="editPartnershipPartner">
+                                    Partner *
+                                </label>
+
+                                <select
+                                    id="editPartnershipPartner"
+                                    required
+                                >
+                                    <option value="">
+                                        Select partner
+                                    </option>
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group full-field">
+
+                                <label for="editPartnershipTitle">
+                                    Partnership Title *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="editPartnershipTitle"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editPartnershipCode">
+                                    Partnership Code
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="editPartnershipCode"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editPartnershipType">
+                                    Partnership Type *
+                                </label>
+
+                                <select
+                                    id="editPartnershipType"
+                                    required
+                                >
+                                    <option value="">
+                                        Select type
+                                    </option>
+                                </select>
+
+                            </div>
+
+
+                            <div
+                                id="editPartnershipTypeOtherGroup"
+                                class="form-group hidden"
+                            >
+
+                                <label for="editPartnershipTypeOther">
+                                    Please specify Partnership Type *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="editPartnershipTypeOther"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editPartnershipStatus">
+                                    Status *
+                                </label>
+
+                                <select
+                                    id="editPartnershipStatus"
+                                    required
+                                >
+                                    <option value="">
+                                        Select status
+                                    </option>
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editContractStartDate">
+                                    Contract Start Date *
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="editContractStartDate"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editContractEndDate">
+                                    Contract End Date
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="editContractEndDate"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editActualEndDate">
+                                    Actual End Date
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="editActualEndDate"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group full-field">
+
+                                <label for="editPartnershipArea">
+                                    Area of Partnership
+                                </label>
+
+                                <textarea
+                                    id="editPartnershipArea"
+                                    rows="3"
+                                ></textarea>
+
+                            </div>
+
+
+                            <div class="form-group full-field">
+
+                                <label for="editStrategicObjective">
+                                    Strategic Objective / Purpose
+                                </label>
+
+                                <textarea
+                                    id="editStrategicObjective"
+                                    rows="4"
+                                ></textarea>
+
+                            </div>
+
+
+                            <div class="form-group full-field">
+
+                                <label for="editGeographicScope">
+                                    Geographic Scope
+                                </label>
+
+                                <textarea
+                                    id="editGeographicScope"
+                                    rows="3"
+                                ></textarea>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editWHHFocalPerson">
+                                    WHH Focal Person
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="editWHHFocalPerson"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editPartnerFocalPerson">
+                                    Partner Focal Person
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="editPartnerFocalPerson"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editWHHRole">
+                                    WHH Role
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="editWHHRole"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="editPartnerRole">
+                                    Partner Role
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="editPartnerRole"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group checkbox-group">
+
+                                <label>
+
+                                    <input
+                                        type="checkbox"
+                                        id="editCoDesigned"
+                                    >
+
+                                    Co-designed Partnership
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="form-group full-field">
+
+                                <label for="editPartnershipNotes">
+                                    Notes
+                                </label>
+
+                                <textarea
+                                    id="editPartnershipNotes"
+                                    rows="4"
+                                ></textarea>
+
+                            </div>
+
+
+                            <div
+                                id="partnershipEditMessage"
+                                class="form-message full-field"
+                            ></div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 AGREEMENTS / MOUS
+            ============================================== -->
+
+            <section
+                id="partnershipAgreementsTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Agreements / MoUs
+                        </h3>
+
+
+                        <button
+                            id="addAgreementButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Add Agreement
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-panel flat">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Reference
+                                    </th>
+
+                                    <th>
+                                        Agreement
+                                    </th>
+
+                                    <th>
+                                        Type
+                                    </th>
+
+                                    <th>
+                                        Signed
+                                    </th>
+
+                                    <th>
+                                        Start
+                                    </th>
+
+                                    <th>
+                                        End
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Documents
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="partnershipAgreementsTableBody"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 RELATED PROJECTS
+            ============================================== -->
+
+            <section
+                id="partnershipProjectsTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Related Projects
+                        </h3>
+
+
+                        <button
+                            id="linkPartnershipProjectButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Link Project
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-panel flat">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        PROMIS Project Code
+                                    </th>
+
+                                    <th>
+                                        PROMIS Project Name
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Relationship Notes
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="partnershipProjectsTableBody"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 CAPACITY
+            ============================================== -->
+
+            <section
+                id="partnershipCapacityTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Capacity Assessments
+                        </h3>
+
+
+                        <button
+                            id="addCapacityAssessmentButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Add Assessment
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-panel flat">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Assessment Date
+                                    </th>
+
+                                    <th>
+                                        Type
+                                    </th>
+
+                                    <th>
+                                        Period
+                                    </th>
+
+                                    <th>
+                                        Method
+                                    </th>
+
+                                    <th>
+                                        Assessed By
+                                    </th>
+
+                                    <th>
+                                        Gaps
+                                    </th>
+
+                                    <th>
+                                        Documents
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="capacityAssessmentsTableBody"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    id="capacityAssessmentDetailContainer"
+                    class="hidden"
+                ></div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 EQUITY
+            ============================================== -->
+
+            <section
+                id="partnershipEquityTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Partnership Equity Reviews
+                        </h3>
+
+
+                        <button
+                            id="addEquityReviewButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Add Equity Review
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-panel flat">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Assessment Date
+                                    </th>
+
+                                    <th>
+                                        Equity Area
+                                    </th>
+
+                                    <th>
+                                        Conducted By
+                                    </th>
+
+                                    <th>
+                                        Improvement Needed
+                                    </th>
+
+                                    <th>
+                                        Responsible
+                                    </th>
+
+                                    <th>
+                                        Target Date
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Documents
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="equityReviewsTableBody"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 FEEDBACK
+            ============================================== -->
+
+            <section
+                id="partnershipFeedbackTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Partnership Feedback
+                        </h3>
+
+
+                        <button
+                            id="addFeedbackButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Add Feedback
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-panel flat">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Date
+                                    </th>
+
+                                    <th>
+                                        From
+                                    </th>
+
+                                    <th>
+                                        To
+                                    </th>
+
+                                    <th>
+                                        Type
+                                    </th>
+
+                                    <th>
+                                        Subject
+                                    </th>
+
+                                    <th>
+                                        Resolution Status
+                                    </th>
+
+                                    <th>
+                                        Follow-up
+                                    </th>
+
+                                    <th>
+                                        Documents
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="feedbackTableBody"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 MEETINGS / ACTION POINTS
+            ============================================== -->
+
+            <section
+                id="partnershipMeetingsTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Coordination Meetings
+                        </h3>
+
+
+                        <button
+                            id="addMeetingButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Add Meeting
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-panel flat">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Date
+                                    </th>
+
+                                    <th>
+                                        Meeting
+                                    </th>
+
+                                    <th>
+                                        Type
+                                    </th>
+
+                                    <th>
+                                        Follow-up Required
+                                    </th>
+
+                                    <th>
+                                        Open Actions
+                                    </th>
+
+                                    <th>
+                                        Documents
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="partnershipMeetingsTableBody"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    id="meetingDetailContainer"
+                    class="hidden"
+                ></div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 SUCCESS STORIES
+            ============================================== -->
+
+            <section
+                id="partnershipSuccessTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Success Stories
+                        </h3>
+
+
+                        <button
+                            id="addSuccessStoryButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Add Success Story
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-panel flat">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Date
+                                    </th>
+
+                                    <th>
+                                        Title
+                                    </th>
+
+                                    <th>
+                                        Success Type
+                                    </th>
+
+                                    <th>
+                                        Related Project
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        External Use
+                                    </th>
+
+                                    <th>
+                                        Documents
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="successStoriesTableBody"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 EXIT / CLOSURE
+            ============================================== -->
+
+            <section
+                id="partnershipExitTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Exit / Closure
+                        </h3>
+
+
+                        <button
+                            id="addExitStrategyButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Add Exit / Closure Record
+                        </button>
+
+                    </div>
+
+
+                    <div id="exitStrategyContainer"></div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 PARTNERSHIP DOCUMENTS
+            ============================================== -->
+
+            <section
+                id="partnershipDocumentsTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Partnership Documents
+                        </h3>
+
+
+                        <button
+                            id="uploadPartnershipDocumentButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Upload Document
+                        </button>
+
+                    </div>
+
+
+                    <div class="document-filter-row">
+
+                        <select id="documentModuleFilter">
+
+                            <option value="">
+                                All modules
+                            </option>
+
+                            <option value="Partnership">
+                                Partnership
+                            </option>
+
+                            <option value="Agreement">
+                                Agreements / MoUs
+                            </option>
+
+                            <option value="Capacity">
+                                Capacity
+                            </option>
+
+                            <option value="Equity">
+                                Equity
+                            </option>
+
+                            <option value="Feedback">
+                                Feedback
+                            </option>
+
+                            <option value="Meeting">
+                                Meetings
+                            </option>
+
+                            <option value="Action">
+                                Actions
+                            </option>
+
+                            <option value="Success Story">
+                                Success Stories
+                            </option>
+
+                            <option value="Exit">
+                                Exit / Closure
+                            </option>
+
+                            <option value="Project">
+                                Projects
+                            </option>
+
+                        </select>
+
+
+                        <input
+                            type="search"
+                            id="documentSearch"
+                            placeholder="Search documents..."
+                        >
+
+                    </div>
+
+
+                    <div
+                        id="partnershipDocumentsContainer"
+                    ></div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PROJECT LIST
+        ================================================== -->
+
+        <section
+            id="projectListView"
+            class="workspace-view hidden"
+        >
+
+            <div class="page-heading-row">
+
+                <div>
+
+                    <h2>
+                        Projects
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="addProjectButton"
+                    type="button"
+                    class="primary-button hidden"
+                >
+                    Add Project
+                </button>
+
+            </div>
+
+
+            <div class="filter-row">
+
+                <input
+                    type="search"
+                    id="projectSearch"
+                    class="search-input"
+                    placeholder="Search project code or name..."
+                >
+
+            </div>
+
+
+            <div class="table-panel">
+
+                <table class="data-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Project Code
+                            </th>
+
+                            <th>
+                                Project Name
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Intervention
+                            </th>
+
+                            <th>
+                                Start
+                            </th>
+
+                            <th>
+                                End
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="projectTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PROJECT DETAIL
+        ================================================== -->
+
+        <section
+            id="projectProfileView"
+            class="workspace-view hidden"
+        >
+
+            <div class="record-toolbar">
+
+                <button
+                    id="backToProjectsButton"
+                    type="button"
+                    class="text-button"
+                >
+                    ← Back to Projects
+                </button>
+
+            </div>
+
+
+            <div class="record-header">
+
+                <div>
+
+                    <h2 id="projectProfileName"></h2>
+
+                    <div
+                        id="projectProfileCode"
+                        class="record-subtitle"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="tab-navigation">
+
+                <button
+                    id="projectOverviewTabButton"
+                    class="tab-button active"
+                    type="button"
+                >
+                    Overview
+                </button>
+
+
+                <button
+                    id="projectPartnersTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Partners
+                </button>
+
+
+                <button
+                    id="projectSectorsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Sectors
+                </button>
+
+
+                <button
+                    id="projectLocationsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Locations
+                </button>
+
+
+                <button
+                    id="projectBudgetsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Budgets
+                </button>
+
+
+                <button
+                    id="projectParticipantsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Participants
+                </button>
+
+
+                <button
+                    id="projectDocumentsTabButton"
+                    class="tab-button"
+                    type="button"
+                >
+                    Documents
+                </button>
+
+            </div>
+
+
+            <section
+                id="projectOverviewTabContent"
+                class="tab-content"
+            ></section>
+
+
+            <section
+                id="projectPartnersTabContent"
+                class="tab-content hidden"
+            ></section>
+
+
+            <section
+                id="projectSectorsTabContent"
+                class="tab-content hidden"
+            ></section>
+
+
+            <section
+                id="projectLocationsTabContent"
+                class="tab-content hidden"
+            ></section>
+
+
+            <section
+                id="projectBudgetsTabContent"
+                class="tab-content hidden"
+            ></section>
+
+
+            <section
+                id="projectParticipantsTabContent"
+                class="tab-content hidden"
+            ></section>
+
+
+            <section
+                id="projectDocumentsTabContent"
+                class="tab-content hidden"
+            >
+
+                <div class="section-panel">
+
+                    <div class="section-title-row">
+
+                        <h3>
+                            Project Documents
+                        </h3>
+
+                        <button
+                            id="uploadProjectDocumentButton"
+                            type="button"
+                            class="primary-button small-button hidden"
+                        >
+                            Upload Document
+                        </button>
+
+                    </div>
+
+                    <div id="projectDocumentsContainer"></div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             MEETING WORKSPACE
+        ================================================== -->
+
+        <section
+            id="meetingListView"
+            class="workspace-view hidden"
+        >
+
+            <div class="page-heading-row">
+
+                <div>
+
+                    <h2>
+                        Meetings & Action Points
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="addStandaloneMeetingButton"
+                    type="button"
+                    class="primary-button hidden"
+                >
+                    Add Meeting
+                </button>
+
+            </div>
+
+
+            <div class="filter-row">
+
+                <input
+                    type="search"
+                    id="meetingSearch"
+                    class="search-input"
+                    placeholder="Search meetings..."
+                >
+
+            </div>
+
+
+            <div class="table-panel">
+
+                <table class="data-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Partner
+                            </th>
+
+                            <th>
+                                Partnership
+                            </th>
+
+                            <th>
+                                Meeting
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Open Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="meetingTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</section>
+
+
+
+<!-- =========================================================
+     MODAL ROOT
+========================================================= -->
+
+<div id="modalRoot"></div>
+
+
+
+<!-- =========================================================
+     TOAST / MESSAGE ROOT
+========================================================= -->
+
+<div
+    id="toastRoot"
+    class="toast-root"
+></div>
+
+
+
+<!-- =========================================================
+     APPLICATION SCRIPTS
+========================================================= -->
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="fixes.js"></script>
+<script src="participants.js"></script>
+
+</body>
+</html>
