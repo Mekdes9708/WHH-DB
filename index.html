@@ -254,54 +254,37 @@
              HOME
         ================================================== -->
 
-        <section
-            id="homeView"
-            class="workspace-view"
-        >
-
-            <div class="home-heading">
-                <h2>Partnership Management</h2>
+        <section id="homeView" class="workspace-view">
+            <div class="page-heading-row">
+                <div><h2>Partnership overview</h2><p class="overview-subtitle">A summary of your records and items that need follow-up.</p></div>
+                <button id="homeRefresh" type="button" class="secondary-button">Refresh overview</button>
             </div>
-
-            <div class="home-module-grid">
-
-                <button type="button" class="home-module-card" data-home-workspace="partners">
-                    <span class="home-module-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false"><path d="M16 11a4 4 0 1 0-3.7-5.5A5 5 0 0 1 13 8c0 1.1-.35 2.12-.95 2.95A6.5 6.5 0 0 1 18.5 17v1H22v-1.5A5.5 5.5 0 0 0 16.5 11H16ZM7.5 12A4.5 4.5 0 1 0 7.5 3a4.5 4.5 0 0 0 0 9Zm0 2C3.36 14 0 16.46 0 19.5V21h15v-1.5C15 16.46 11.64 14 7.5 14Z"/></svg>
-                    </span>
-                    <span class="home-module-title">Partners</span>
-                </button>
-
-                <button type="button" class="home-module-card" data-home-workspace="partnerships">
-                    <span class="home-module-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false"><path d="M8.6 12.8 5.8 15.6a3 3 0 1 0 4.2 4.2l3.2-3.2-1.4-1.4-3.2 3.2a1 1 0 1 1-1.4-1.4l2.8-2.8-1.4-1.4Zm6.8-1.6 2.8-2.8A3 3 0 1 0 14 4.2l-3.2 3.2 1.4 1.4L15.4 5.6A1 1 0 1 1 16.8 7l-2.8 2.8 1.4 1.4ZM8.8 16.6l7.8-7.8-1.4-1.4-7.8 7.8 1.4 1.4Z"/></svg>
-                    </span>
-                    <span class="home-module-title">Partnerships</span>
-                </button>
-
-                <button type="button" class="home-module-card" data-home-workspace="projects">
-                    <span class="home-module-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false"><path d="M9 4V2h6v2h5a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5Zm2 0h2V3h-2v1Zm-7 6v9h16v-9h-6v2h-4v-2H4Zm6 0h4V8h-4v2ZM4 6v2h5V7h6v1h5V6H4Z"/></svg>
-                    </span>
-                    <span class="home-module-title">Projects</span>
-                </button>
-
-                <button type="button" class="home-module-card" data-home-workspace="meetings">
-                    <span class="home-module-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-8h16v8ZM4 9V7a1 1 0 0 1 1-1h1v2h2V6h8v2h2V6h1a1 1 0 0 1 1 1v2H4Zm3 5h4v4H7v-4Z"/></svg>
-                    </span>
-                    <span class="home-module-title">Meetings &amp; Actions</span>
-                </button>
-
-                <a class="home-module-card home-module-link" href="https://welthungerhilfe.sharepoint.com/sites/promis" target="_blank" rel="noopener noreferrer">
-                    <span class="home-module-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false"><path d="M14 3h7v7h-2V6.41l-8.3 8.3-1.4-1.42L17.58 5H14V3ZM5 5h6v2H5a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-6h2v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Z"/></svg>
-                    </span>
-                    <span class="home-module-title">PROMIS</span>
-                </a>
-
+            <p id="homeLoadStatus" class="overview-status" role="status" aria-live="polite">Loading overview…</p>
+            <div class="overview-metrics" aria-label="Record summary">
+                <div class="overview-metric"><span>Partners</span><strong id="homePartnerCount">…</strong></div>
+                <div class="overview-metric"><span>Partnerships</span><strong id="homePartnershipCount">…</strong></div>
+                <div class="overview-metric"><span>Projects</span><strong id="homeProjectCount">…</strong></div>
+                <div class="overview-metric"><span id="homeAgreementWindowLabel">Expiring within 30 days</span><strong id="homeAgreementCount">…</strong></div>
+                <div class="overview-metric"><span>Overdue actions</span><strong id="homeActionCount">…</strong></div>
+                <div class="overview-metric"><span>Support awaiting follow-up</span><strong id="homeFollowupCount">…</strong></div>
             </div>
-
+            <div class="overview-panels">
+                <section class="section-panel">
+                    <div class="section-title-row"><h3>Agreements nearing expiry</h3><div><label for="homeExpiryWindow">Within</label> <select id="homeExpiryWindow"><option value="30">30 days</option><option value="60">60 days</option><option value="90">90 days</option></select></div></div>
+                    <p class="overview-help">Today through the selected period; excludes agreements marked completed, closed, cancelled, terminated, or expired.</p>
+                    <div id="homeAgreements">Loading…</div>
+                </section>
+                <section class="section-panel">
+                    <div class="section-title-row"><h3>Overdue action points</h3></div>
+                    <p class="overview-help">Target date has passed, with no completion date and no completed, closed, or cancelled status.</p>
+                    <div id="homeActions">Loading…</div>
+                </section>
+                <section class="section-panel overview-full-width">
+                    <div class="section-title-row"><h3>Capacity support awaiting follow-up</h3></div>
+                    <p class="overview-help">Completed support without a linked follow-up or a gap-level follow-up recorded on or after its completion date.</p>
+                    <div id="homeFollowups">Loading…</div>
+                </section>
+            </div>
         </section>
 
 

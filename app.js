@@ -1057,9 +1057,8 @@ async function loadApplication() {
 
     applyPermissions();
 
-    showWorkspace(
-        "home"
-    );
+    showWorkspace("home");
+    await loadHomeOverview();
 }
 
 
@@ -1260,6 +1259,161 @@ function applyPermissions() {
 // MAIN NAVIGATION
 // ============================================================
 
+// Home overview: uses the signed-in user's existing Supabase permissions.
+const homeOverview = (() => {
+    const specs = {
+        partners: ['partner_id', 'partner_id,partner_name'],
+        partnerships: ['partnership_id', 'partnership_id,partnership_title,partner_id'],
+        projects: ['project_id', 'project_id'],
+        partnership_agreements: ['agreement_id', 'agreement_id,agreement_title,agreement_reference,partnership_id,expiry_date,agreement_status_id'],
+        action_points: ['action_point_id', 'action_point_id,action_description,partnership_id,target_date,completion_date,action_status_id,responsible_person,assigned_to'],
+        capacity_support_actions: ['capacity_support_id', 'capacity_support_id,capacity_gap_id,planned_support,support_status,completion_date,end_date'],
+        capacity_followups: ['capacity_followup_id', 'capacity_followup_id,capacity_support_id,capacity_gap_id,followup_date'],
+        capacity_gaps: ['capacity_gap_id', 'capacity_gap_id,capacity_assessment_id'],
+        capacity_assessments: ['capacity_assessment_id', 'capacity_assessment_id,partnership_id']
+    };
+    const closed = value => /^(completed|closed|cancelled|canceled|terminated|expired)$/i.test(String(value || '').trim());
+    const dateKey = date => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    let data = {}, errors = {}, generation = 0;
+    const expanded = new Set();
+
+    async function readRows(table) {
+        const [id, columns] = specs[table];
+        const rows = [];
+        let start = 0;
+        while (true) {
+            const result = await supabaseClient.from(table).select(columns).order(id).range(start, start+999);
+            if (result.error) throw result.error;
+            if (!result.data?.length) return rows;
+            rows.push(...result.data);
+            start += result.data.length;
+        }
+    }
+
+    function status(table, idKey, nameKey, id) {
+        return (state.lookups[table] || []).find(row => String(row[idKey]) === String(id))?.[nameKey] || '';
+    }
+
+    function calculate(rows, today, days) {
+        const end = new Date(`${today}T12:00:00`);
+        end.setDate(end.getDate()+days);
+        const lastDay = dateKey(end);
+        const agreements = (rows.partnership_agreements || []).filter(row =>
+            row.expiry_date && row.expiry_date >= today && row.expiry_date <= lastDay &&
+            !closed(status('agreement_statuses','agreement_status_id','agreement_status_name',row.agreement_status_id))
+        ).sort((a,b) => a.expiry_date.localeCompare(b.expiry_date));
+        const actions = (rows.action_points || []).filter(row =>
+            row.target_date && row.target_date < today && !row.completion_date &&
+            !closed(status('action_statuses','action_status_id','action_status_name',row.action_status_id))
+        ).sort((a,b) => a.target_date.localeCompare(b.target_date));
+        const supports = (rows.capacity_support_actions || []).filter(row => {
+            if (String(row.support_status || '').trim().toLowerCase() !== 'completed') return false;
+            // A support-specific follow-up or a later gap-level follow-up counts.
+            return !(rows.capacity_followups || []).some(followup => {
+                if (String(followup.capacity_support_id) === String(row.capacity_support_id)) return true;
+                const completion = row.completion_date || row.end_date;
+                return followup.capacity_support_id == null && completion && followup.followup_date >= completion &&
+                    String(followup.capacity_gap_id) === String(row.capacity_gap_id);
+            });
+        }).sort((a,b) => String(a.completion_date || a.end_date || '').localeCompare(String(b.completion_date || b.end_date || '')));
+        return {agreements, actions, supports};
+    }
+
+    function partnershipLabel(id) {
+        const p = data.partnerships?.find(row => String(row.partnership_id) === String(id));
+        const partner = data.partners?.find(row => String(row.partner_id) === String(p?.partner_id));
+        return partner?.partner_name || p?.partnership_title || (id ? `Partnership ${id}` : 'No partnership linked');
+    }
+
+    function recordButton(id, tab) {
+        if (!id) return '';
+        return `<button type="button" class="inline-button" data-overview-partnership="${esc(id)}" data-overview-tab="${tab}">Open partnership</button>`;
+    }
+
+    function panel(id, rows, dependencies, makeRow, empty) {
+        const target = $(id);
+        if (!target) return;
+        const failed = dependencies.some(table => errors[table]);
+        if (failed) { target.textContent = 'Unable to load this section. Please refresh or check your access.'; return; }
+        if (!rows.length) { target.textContent = empty; return; }
+        const shown = expanded.has(id) ? rows : rows.slice(0,8);
+        target.innerHTML = `<ul class="overview-list">${shown.map(makeRow).join('')}</ul>` +
+            (rows.length > 8 ? `<button type="button" class="text-button overview-expand" data-overview-expand="${id}">${expanded.has(id) ? 'Show fewer' : `Show all ${rows.length}`}</button>` : '');
+    }
+
+    function render() {
+        const today = dateKey(new Date());
+        const days = Number($('homeExpiryWindow')?.value || 30);
+        const result = calculate(data,today,days);
+        const metrics = [
+            ['homePartnerCount','partners'], ['homePartnershipCount','partnerships'], ['homeProjectCount','projects']
+        ];
+        metrics.forEach(([id,table]) => { $(id).textContent = errors[table] ? 'Unavailable' : String(data[table]?.length || 0); });
+        const metric = (id, value, tables) => { $(id).textContent = tables.some(t=>errors[t]) ? 'Unavailable' : String(value); };
+        metric('homeAgreementCount',result.agreements.length,['partnership_agreements']);
+        metric('homeActionCount',result.actions.length,['action_points']);
+        metric('homeFollowupCount',result.supports.length,['capacity_support_actions','capacity_followups']);
+        $('homeAgreementWindowLabel').textContent = `Expiring within ${days} days`;
+        panel('homeAgreements',result.agreements,['partnership_agreements'],row=>
+            `<li><div><strong>${esc(row.agreement_title || row.agreement_reference || `Agreement ${row.agreement_id}`)}</strong><p>${esc(partnershipLabel(row.partnership_id))} · Expires ${esc(fmtDate(row.expiry_date))}</p></div>${recordButton(row.partnership_id,'agreements')}</li>`,
+            `No agreements expiring in the next ${days} days.`);
+        panel('homeActions',result.actions,['action_points'],row=>
+            `<li><div><strong>${esc(row.action_description || 'Action point')}</strong><p>${esc(partnershipLabel(row.partnership_id))} · Due ${esc(fmtDate(row.target_date))} · ${esc(row.responsible_person || row.assigned_to || 'No owner recorded')}</p></div>${recordButton(row.partnership_id,'meetings')}</li>`,
+            'No overdue actions.');
+        panel('homeFollowups',result.supports,['capacity_support_actions','capacity_followups','capacity_gaps','capacity_assessments'],row=>{
+            const gap = data.capacity_gaps?.find(g=>String(g.capacity_gap_id)===String(row.capacity_gap_id));
+            const assessment = data.capacity_assessments?.find(a=>String(a.capacity_assessment_id)===String(gap?.capacity_assessment_id));
+            return `<li><div><strong>${esc(row.planned_support || 'Completed capacity support')}</strong><p>${esc(partnershipLabel(assessment?.partnership_id))} · Completed ${esc(fmtDate(row.completion_date || row.end_date))}</p></div>${recordButton(assessment?.partnership_id,'capacity')}</li>`;
+        },'No completed support awaiting a recorded follow-up.');
+        $('homeView').querySelectorAll('[data-overview-expand]').forEach(button=>{
+            button.onclick = ()=>{const id=button.dataset.overviewExpand; expanded.has(id) ? expanded.delete(id) : expanded.add(id); render();};
+        });
+        $('homeView').querySelectorAll('[data-overview-partnership]').forEach(button=>{
+            button.onclick = async ()=>{
+                button.disabled = true;
+                try {
+                    const id=Number(button.dataset.overviewPartnership), tab=button.dataset.overviewTab;
+                    await openPartnership(id);
+                    if (Number(state.partnership?.partnership_id)!==id) return;
+                    switchTabs(partnershipTabs,tab);
+                    if(tab==='agreements') await loadAgreements();
+                    else if(tab==='meetings') await loadPartnershipMeetings();
+                    else if(tab==='capacity') await loadCapacity();
+                } catch(error) { toast(error.message || 'Unable to open this partnership.'); }
+                finally { button.disabled=false; }
+            };
+        });
+        const failed=Object.keys(errors).length;
+        $('homeLoadStatus').textContent = failed ? 'Some sections could not be loaded. Refresh to retry.' : `Updated ${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}. Counts reflect records you can access.`;
+    }
+
+    async function load() {
+        const request=++generation;
+        $('homeRefresh').onclick=load;
+        $('homeExpiryWindow').onchange=render;
+        $('homeRefresh').disabled=true;
+        $('homeLoadStatus').textContent='Loading overview…';
+        ['homePartnerCount','homePartnershipCount','homeProjectCount','homeAgreementCount','homeActionCount','homeFollowupCount'].forEach(id=>$(id).textContent='…');
+        ['homeAgreements','homeActions','homeFollowups'].forEach(id=>$(id).textContent='Loading…');
+        const tables=Object.keys(specs);
+        const results=await Promise.allSettled(tables.map(readRows));
+        if(request!==generation) return;
+        data={}; errors={}; expanded.clear();
+        results.forEach((result,i)=>{
+            if(result.status==='fulfilled') data[tables[i]]=result.value;
+            else errors[tables[i]]=true;
+        });
+        render();
+        $('homeRefresh').disabled=false;
+    }
+    return {load,calculate,readRows};
+})();
+
+async function loadHomeOverview() { await homeOverview.load(); }
+
+
+// ============================================================
+
 const workspaceIds = [
 
     "homeView",
@@ -1417,44 +1571,10 @@ function showWorkspace(name) {
 }
 
 
-$("homeNav")
-    ?.addEventListener(
-        "click",
-        () => {
-            showWorkspace(
-                "home"
-            );
-        }
-    );
-
-
-document
-    .querySelectorAll("[data-home-workspace]")
-    .forEach(
-        card => {
-            card.addEventListener(
-                "click",
-                async () => {
-                    const target = card.dataset.homeWorkspace;
-                    showWorkspace(target);
-
-                    if (target === "partners") {
-                        await loadPartners();
-                    }
-                    else if (target === "partnerships") {
-                        await loadPartnerships();
-                    }
-                    else if (target === "projects") {
-                        await loadProjects();
-                    }
-                    else if (target === "meetings") {
-                        await loadMeetingsWorkspace();
-                    }
-                }
-            );
-        }
-    );
-
+$("homeNav")?.addEventListener("click", async () => {
+    showWorkspace("home");
+    await loadHomeOverview();
+});
 
 $("partnersNav")
     ?.addEventListener(
