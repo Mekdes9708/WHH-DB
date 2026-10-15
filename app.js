@@ -2279,12 +2279,12 @@ async function loadPartners(
 
 
                     const legalStatus =
-                        lookupName(
+                        categoryLabel(lookupName(
                             "legal_statuses",
                             "legal_status_id",
                             "legal_status_name",
                             partner.legal_status_id
-                        );
+                        ), partner.legal_status_other);
 
 
                     return `
@@ -2476,12 +2476,12 @@ function renderPartnerProfile() {
 
     setText(
         "profileLegalStatus",
-        lookupName(
+        categoryLabel(lookupName(
             "legal_statuses",
             "legal_status_id",
             "legal_status_name",
             partner.legal_status_id
-        )
+        ), partner.legal_status_other)
     );
 
 
@@ -2619,12 +2619,12 @@ async function loadPartnerLocalization() {
                     <span class="tag-item">
                         ${
                             esc(
-                                lookupName(
+                                categoryLabel(lookupName(
                                     "localization_characteristics",
                                     "localization_characteristic_id",
                                     "characteristic_name",
                                     record.localization_characteristic_id
-                                )
+                                ), record.other_description)
                             )
                         }
                     </span>
@@ -2633,6 +2633,21 @@ async function loadPartnerLocalization() {
             .join("");
 }
 
+
+// Category labels preserve custom descriptions without changing lookup IDs.
+function categoryLabel(name, custom) {
+    return String(name || "").trim().toLowerCase() === "other" && custom
+        ? custom : (name || "");
+}
+function categoryOtherValue(selectId, inputId) {
+    const select = $(selectId);
+    const name = select?.options[select.selectedIndex]?.textContent?.trim().toLowerCase();
+    if (name !== "other") return null;
+    const value = $(inputId)?.value?.trim();
+    if (!value) throw new Error("Please specify the Other category.");
+    if (value.length > 200) throw new Error("The category description must be 200 characters or fewer.");
+    return value;
+}
 
 function partnerForm(
     record = null
@@ -2877,6 +2892,7 @@ function partnerForm(
                     ? emptyToNull($("pfTypeOther").value)
                     : null,
                 legal_status_id: numOrNull($("pfLegal").value),
+                legal_status_other: categoryOtherValue("pfLegal", "pfLegalOther"),
                 date_established: emptyToNull($("pfEstablished").value),
                 headquarters_location: emptyToNull($("pfHQ").value),
                 city: emptyToNull($("pfHQ").value),
@@ -5136,7 +5152,7 @@ async function loadCapacity() {
         return `
         <tr class="clickable-row" data-id="${assessment.capacity_assessment_id}">
             <td>${fmtDate(assessment.assessment_date)}</td>
-            <td>${esc(assessment.assessment_type || "")}</td>
+            <td>${esc(categoryLabel(assessment.assessment_type, assessment.assessment_type_other))}</td>
             <td>${esc(period)}</td>
             <td>${esc(assessment.assessment_method || "")}</td>
             <td>${esc(assessment.assessed_by || "")}</td>
@@ -5238,6 +5254,7 @@ function capacityAssessmentForm() {
                     assessment_period_start: start,
                     assessment_period_end: end,
                     assessment_type: emptyToNull($("caType").value),
+                    assessment_type_other: categoryOtherValue("caType", "caTypeOther"),
                     assessment_method: emptyToNull($("caMethod").value),
                     assessed_by: emptyToNull($("caBy").value),
                     partner_participants: emptyToNull($("caParticipants").value),
@@ -5331,7 +5348,7 @@ async function openCapacityAssessment(assessmentId) {
 
             <div class="detail-grid">
                 <div class="detail-item"><span class="detail-label">Date</span>${fmtDate(assessment.assessment_date)}</div>
-                <div class="detail-item"><span class="detail-label">Type</span>${esc(assessment.assessment_type || "—")}</div>
+                <div class="detail-item"><span class="detail-label">Type</span>${esc(categoryLabel(assessment.assessment_type, assessment.assessment_type_other) || "—")}</div>
                 <div class="detail-item"><span class="detail-label">Period</span>${esc(period)}</div>
                 <div class="detail-item"><span class="detail-label">Method</span>${esc(assessment.assessment_method || "—")}</div>
                 <div class="detail-item"><span class="detail-label">Assessed By</span>${esc(assessment.assessed_by || "—")}</div>
@@ -5832,8 +5849,8 @@ async function loadFeedback() {
     body.innerHTML = data.map(feedback => `
         <tr>
             <td>${fmtDate(feedback.date_received)}</td>
-            <td>${esc(feedback.feedback_from || "")}</td>
-            <td>${esc(feedback.feedback_to || "")}</td>
+            <td>${esc(categoryLabel(feedback.feedback_from, feedback.feedback_from_other))}</td>
+            <td>${esc(categoryLabel(feedback.feedback_to, feedback.feedback_to_other))}</td>
             <td>${esc(feedback.feedback_type || "")}</td>
             <td>${esc(feedback.subject || feedback.issue_category || "")}</td>
             <td>${statusBadge(
@@ -5968,7 +5985,9 @@ function feedbackForm() {
                     is_jointly_resolved: $("fbJoint").checked,
                     notes: emptyToNull($("fbNotes").value),
                     feedback_from: emptyToNull($("fbFrom").value),
+                    feedback_from_other: categoryOtherValue("fbFrom", "fbFromOther"),
                     feedback_to: emptyToNull($("fbTo").value),
+                    feedback_to_other: categoryOtherValue("fbTo", "fbToOther"),
                     feedback_type: feedbackType,
                     subject: emptyToNull($("fbSubject").value),
                     is_confidential: $("fbConf").checked,
@@ -7130,12 +7149,12 @@ async function loadProjects(
                         <td>
                             ${
                                 esc(
-                                    lookupName(
+                                    categoryLabel(lookupName(
                                         "intervention_types",
                                         "intervention_type_id",
                                         "intervention_type_name",
                                         project.intervention_type_id
-                                    )
+                                    ), project.intervention_type_other)
                                 )
                             }
                         </td>
@@ -7329,12 +7348,12 @@ async function renderProjectOverview() {
 
                     ${
                         esc(
-                            lookupName(
+                            categoryLabel(lookupName(
                                 "intervention_types",
                                 "intervention_type_id",
                                 "intervention_type_name",
                                 project.intervention_type_id
-                            )
+                            ), project.intervention_type_other)
                             ||
                             "—"
                         )
@@ -7600,6 +7619,7 @@ function projectForm(
                                 numOrNull(
                                     $("prIntervention").value
                                 ),
+                intervention_type_other: categoryOtherValue("prIntervention", "prInterventionOther"),
 
                             start_date:
                                 emptyToNull(
@@ -8534,12 +8554,12 @@ async function loadProjectBudgets() {
                                                 <td>
                                                     ${
                                                         esc(
-                                                            lookupName(
+                                                            categoryLabel(lookupName(
                                                                 "budget_types",
                                                                 "budget_type_id",
                                                                 "budget_type_name",
                                                                 budget.budget_type_id
-                                                            )
+                                                            ), budget.budget_type_other)
                                                             ||
                                                             budget.budget_type
                                                             ||
@@ -8696,6 +8716,7 @@ async function loadProjectBudgets() {
                                             numOrNull(
                                                 $("buType").value
                                             ),
+                budget_type_other: categoryOtherValue("buType", "buTypeOther"),
 
                                         amount:
                                             Number(
@@ -9215,3 +9236,4 @@ document.addEventListener(
                 }
             )
 );
+

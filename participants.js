@@ -310,7 +310,7 @@
 
                     <h3>Participants</h3>
 
-                    ${admin ? `<button id="addParticipantBtn" class="primary-button small-button">Add Year</button>` : ""}
+                    ${admin ? `<button id="addParticipantBtn" class="primary-button small-button">Add participant totals</button>` : ""}
 
                 </div>
 

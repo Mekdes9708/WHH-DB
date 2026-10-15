@@ -1,0 +1,27 @@
+/* Styles scoped to the project page; other modules retain their layout. */
+#projectProfileView .record-toolbar { margin-bottom:12px; }
+#projectProfileView .project-summary-header { display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 24px;margin-bottom:16px;min-height:0; }
+#projectProfileView .record-header h2 { font-size:1.45rem;line-height:1.3;margin:0 0 7px;overflow-wrap:anywhere; }
+#projectProfileView #projectProfileCode { display:inline-block;font-size:.85rem;line-height:1.4;color:#526453;background:#eef4eb;border-radius:5px;padding:3px 9px;margin:0; }
+.project-page-actions { display:flex;align-items:center;gap:10px;flex-shrink:0; }
+.project-delete-button { padding:10px 16px;border:1px solid #dcc7c7;background:#fff;border-radius:6px;color:#963a3a;font:inherit;font-size:.88rem;font-weight:600;cursor:pointer; }
+.project-delete-button:hover { background:#fff3f3;border-color:#ba7777; }
+.project-delete-button:focus-visible { outline:3px solid #dbaaaa;outline-offset:2px; }
+#projectProfileView .tab-navigation { margin:0 0 18px;gap:0;overflow-x:auto; }
+#projectProfileView .tab-button { padding:12px 16px;white-space:nowrap; }
+.project-details-card,.project-entry-card { background:#fff;border:1px solid #dde4dd;border-radius:9px;padding:22px 24px;margin-bottom:18px; }
+.project-details-card h3,.project-entry-card h3 { margin:0 0 18px;font-size:1.03rem; }
+.project-facts { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 30px;margin:0; }
+.project-facts > div { min-width:0; }
+.project-facts dt { margin:0 0 5px;font-size:.78rem;font-weight:600;color:#647067;line-height:1.4; }
+.project-facts dd { margin:0;font-size:.94rem;line-height:1.5;color:#23322a;overflow-wrap:anywhere; }
+.project-description { border-top:1px solid #e8ede8;margin-top:20px;padding-top:17px; }
+.project-description h4 { font-size:.8rem;color:#647067;margin:0 0 7px; }
+.project-description p { white-space:pre-wrap;overflow-wrap:anywhere;font-size:.94rem;line-height:1.6;margin:0;color:#34463b; }
+.project-entry-card { background:#f8fbf6; }
+.project-entry-card h3 { margin-bottom:7px; }
+.project-entry-card p { margin:0;font-size:.88rem;line-height:1.5;color:#647067; }
+.project-entry-actions { display:flex;gap:10px;flex-wrap:wrap;margin-top:16px; }
+.project-form-note { padding:12px 14px;margin:0 0 18px;background:#f2f7ee;border-radius:6px;color:#42583c;font-size:.9rem;line-height:1.5; }
+@media(max-width:760px) { .project-facts { grid-template-columns:repeat(2,minmax(0,1fr)); } #projectProfileView .project-summary-header { align-items:flex-start;flex-direction:column; } }
+@media(max-width:460px) { .project-details-card,.project-entry-card { padding:18px; } .project-facts { grid-template-columns:1fr;gap:15px; } .project-page-actions,.project-entry-actions { width:100%;flex-wrap:wrap; } }

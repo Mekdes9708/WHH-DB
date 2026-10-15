@@ -1,0 +1,41 @@
+WHH PROJECT PAGE UPDATE
+
+This is your uploaded local application with a focused project-page update.
+Existing partner controls, Other fields, Participants, Home, and data modules
+are retained. This is a full application folder, not code fragments.
+
+INSTALL LOCALLY
+1. Extract the ZIP into a new folder. Keep your previous folder as a backup.
+2. In Supabase SQL Editor, run database/02_Project_Delete.sql.
+   If it reports that the active-admin check is missing, first run
+   database/01_Admin_And_Other.sql, then run 02_Project_Delete.sql.
+   If a SQL transaction fails, run ROLLBACK; before retrying.
+3. Open the extracted index.html using the same method as your working app.
+4. Sign in as admin and open Projects > select a project.
+5. Confirm the compact project page, header Edit/Delete actions, and Add
+   location / Add participant totals / Add sector / Add budget buttons.
+
+CHANGED WEBSITE FILES
+- index.html (loads the two new files)
+- project-page.js (new)
+- project-page.css (new)
+All other website files are carried over from your uploaded ZIP.
+
+DELETE PROJECT
+Deletion is admin-only. Type the project code to confirm, or the name if there
+is no code. Any FK-linked record blocks deletion, including partnerships,
+locations, participant totals, budgets, agreements, and documents. The function
+never cascades through related records. For a linked project that is no longer
+active, use Edit project to choose an appropriate configured project status.
+Installing the SQL does not itself delete any records.
+
+VERIFICATION
+JavaScript syntax and behavior checks cover the details display, escaped
+values, Other intervention description, all four entry shortcuts, admin-only
+controls, confirmation mismatch, linked-record error handling, and delete list
+refresh. SQL execution and full browser layout were not tested against your
+Supabase environment here.
+
+GITHUB LATER
+Upload index.html, project-page.js, and project-page.css at the repository root.
+Keep the existing assets and app files. Do not upload the database folder.
