@@ -1,0 +1,31 @@
+WHH PARTNERSHIP WORKSPACE — DAILY ENTRY WORKFLOWS
+
+DEPLOYMENT
+1. Extract this ZIP. Upload its files/folders into the root of Mekdes9708/WHH-DB, preserving the directory structure. Replace matching files; keep unrelated existing files. Upload index.html AND assets together. Do not upload the ZIP itself.
+2. Commit and wait for GitHub Pages deployment. Refresh the site with Ctrl+F5.
+3. In Supabase SQL Editor, an authorized maintainer must review and apply these scripts in order. Skip prerequisites already installed:
+   database/01_Admin_And_Other.sql
+   setup/whh_shared_updates.sql
+   setup/whh_daily_workflows.sql
+The scripts do not run when uploaded to GitHub. New entry controls stay unavailable until the workflow script is installed. Existing contacts remain viewable.
+
+ENTRY WORKFLOW
+Sign in -> Partners -> Add partner (maintainer) -> Save.
+Open the partner:
+- Contacts: Add contact; edit, deactivate, or designate the primary contact.
+- Partnerships: Add the partnership, its dates, type, and status.
+- Projects: Register a project or choose a ProMIS reference, then Link project to the partnership. A project is registered once and may be linked to multiple partnerships.
+- Documents: Upload evidence; Open uses a short-lived authenticated link.
+- Activity & actions: Add meetings and actions, set responsibility/due dates, and record completion.
+Global Projects includes the ProMIS reference list and the locally managed register; local saves do not write back into ProMIS.
+
+ACCESS
+Approved active application accounts can view records and add meetings/actions. Staff may update their own records and actions assigned to their account. Maintainers manage contacts, projects, partnerships, project links, documents, imports and settings. No accounts are automatically provisioned and no email-domain auto-access is enabled. Existing rows have no creator; maintainer correction is needed until an action is assigned to an account.
+
+STORAGE AND CHANGE CONTROL
+The existing partnership-documents bucket is made private, with a 20 MB upload limit. Old public links to that bucket will stop working; authenticated Open links replace them. No other buckets are changed. Failed SQL saves are transactional. Confirmed upload rejections trigger cleanup; uncertain outcomes retain bytes for a maintainer to inspect before retrying. Record changes are logged in whh_workflow_audit. No delete control is offered. Direct legacy/API writes are also subject to the new access guards.
+
+VALIDATION
+TypeScript and production build pass. Thirteen CSV/identity/workflow validation tests pass. A local PostgreSQL fixture checks migration/reapply, role checks, creator/assignee permissions, stale-write protection, atomic primary contacts, duplicate project codes/links, dates, file references, completion dates, audit and snapshots.
+The actual Supabase schema, storage upload service and authenticated browser workflows have NOT been integration-tested. Review/apply in a test environment before staff rollout.
+Optional SQL fixture: tests/sql-workflows.mjs uses @electric-sql/pglite as a test-only dependency; it is not included in the browser bundle.
