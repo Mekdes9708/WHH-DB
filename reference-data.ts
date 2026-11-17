@@ -1,0 +1,4 @@
+// Public source contains data contracts only. Partner data is read after Supabase sign-in.
+export type LocalRecord={workbookPartnerId:number;name:string;organizationType:string;partnershipStatus:string;legalStatus:string;firstContact:string;secondContact:string;email:string;phone:string;website:string;address:string;city:string;region:string;country:string;dateEstablished:string;agreementStatus:string;agreementSigned:string;agreementExpiry:string;description:string;isActiveSource:string};
+export const localSource:{sourceFile:string;records:LocalRecord[];potentialMatches:{workbookPartnerId:number;stakeholderId:number;reason:string}[]}={sourceFile:'',records:[],potentialMatches:[]};
+export const verifiedLinks:{projectUrl:string;links:{workbookPartnerId:number;partnerId:number;createdAt:string}[]}={projectUrl:'',links:[]};
