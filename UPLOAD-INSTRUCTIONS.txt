@@ -1,0 +1,12 @@
+WHH-DB GitHub Pages update
+
+1. Extract this ZIP.
+2. Open https://github.com/Mekdes9708/WHH-DB
+3. On main, choose Add file > Upload files.
+4. Upload the extracted files and folders into the repository root, replacing index.html. Do not upload the ZIP itself or an extra enclosing folder.
+5. Commit the changes. GitHub Pages will rebuild automatically.
+6. Open https://mekdes9708.github.io/WHH-DB/ and refresh.
+
+The existing editor is retained at legacy.html. Original repository scripts and styles must remain. Partner records are not included in this package; the new UI reads them after Supabase sign-in. Shared updates and ProMIS imports remain gated until setup/whh_shared_updates.sql is reviewed and installed in Supabase.
+
+Checked: TypeScript, production build, eight import/identity validation tests. Authenticated UI and SQL execution were not tested.
