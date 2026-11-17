@@ -1,29 +1,11 @@
-# WHH Ethiopia Partnership Management
+# WHH partnership frontend
 
-The current React interface is deployed at https://mekdes9708.github.io/WHH-DB/ using the existing GitHub Pages deployment from main. Use the existing Supabase application account to sign in.
+React, TypeScript and Fluent UI application for the existing WHH-DB GitHub Pages site. Sign in uses the existing Supabase application account and active-user authorization. This public source contains no partner exports, workbook records, contact lists or privileged keys. Partner and source-cache data are fetched after sign-in under Supabase access rules. No partner data is saved to browser localStorage by this frontend.
 
-The public repository contains the interface and database setup code, not partner exports or contact records. Live partner data is retrieved after authentication under Supabase access rules. The existing browser publishable key is not a privileged key. Never commit passwords, service-role keys, database exports or real contact fixtures.
+Build with `npm ci`, `npx tsc --noEmit`, `node --experimental-strip-types --test tests/import-validation.test.ts`, then `npm run build`. From the repository root run `node scripts/publish-github-pages.mjs` and commit the source plus generated root index/assets/setup files. GitHub Pages continues deploying main at /WHH-DB/. The original editor is retained at legacy.html with its existing scripts.
 
-The previous interface is preserved at https://mekdes9708.github.io/WHH-DB/legacy.html, with its existing scripts. It remains available while the new shared-save and import functions are activated.
+The public browser key is the same key used by the existing app; it grants no privileged database access. Never add a service-role/secret key or passwords to this source. Optional environment overrides are documented in .env.example.
 
-## Update the interface
+The database setup script at public/setup/whh_shared_updates.sql must be reviewed and run in Supabase SQL Editor to enable the new shared-save and import functions. It requires the original database/01_Admin_And_Other.sql admin guard. The frontend checks readiness and keeps new shared writes gated until setup succeeds. The existing editor remains available during activation. The SQL setup has not been executed by this frontend deployment and needs database testing before operational use.
 
-```sh
-cd frontend
-npm ci
-npx tsc --noEmit
-node --experimental-strip-types --test tests/import-validation.test.ts
-npm run build
-cd ..
-node scripts/publish-github-pages.mjs
-```
-
-Commit both frontend source and generated root index/assets/setup files to main. The Vite base is /WHH-DB/. Do not commit node_modules or private data files.
-
-## Activate shared saves and imports
-
-Review and run setup/whh_shared_updates.sql in the existing Supabase project's SQL Editor. It requires the original database/01_Admin_And_Other.sql admin guard. The setup does not seed or overwrite existing partner records. Sign in and refresh Database connection to check readiness. New shared saves and source imports remain gated until this succeeds. Use the existing editor during activation.
-
-ProMIS partner-project CSV files are imported through Import update after sign-in. Inspect the validation results before applying an update as an administrator. Source-cache records, local partner profiles and agreements remain distinct internally; users work through one Partners register.
-
-The SQL setup still requires database testing. This deployment does not execute schema migrations or modify live Supabase records.
+Source exports are uploaded through Import update after sign-in. CSV validation preserves identifiers and rejects invalid dates, conflicting records and duplicate relationships. Only an active administrator can apply imports or use the new save functions. No export rows are included in public assets. Project/partner identity matching requires explicit review; source assignments never create agreements automatically.
